@@ -1170,7 +1170,10 @@ Text: ${attachment.text}
         return { ...initialState, ...actionState } as State;
     }
 
-    async updateRecentMessageState(state: State): Promise<State> {
+    async updateRecentMessageState(
+        state: State,
+        additionalKeys: { [key: string]: unknown } = {}
+    ): Promise<State> {
         const conversationLength = this.getConversationLength();
         const recentMessagesData = await this.messageManager.getMemories({
             roomId: state.roomId,
@@ -1231,6 +1234,7 @@ Text: ${attachment.text}
             ),
             recentMessagesData,
             attachments: formattedAttachments,
+            ...additionalKeys,
         } as State;
     }
 }

@@ -1008,7 +1008,10 @@ export interface IAgentRuntime {
         additionalKeys?: { [key: string]: unknown }
     ): Promise<State>;
 
-    updateRecentMessageState(state: State): Promise<State>;
+    updateRecentMessageState(
+        state: State,
+        additionalKeys?: { [key: string]: unknown }
+    ): Promise<State>;
 }
 
 export interface IImageDescriptionService extends Service {

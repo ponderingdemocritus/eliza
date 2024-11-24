@@ -37,6 +37,7 @@ PACKAGES=(
     "plugin-bootstrap"
     "plugin-image-generation"
     "plugin-coinbase"
+    "plugin-eternum"
 )
 
 # Build packages in specified order
