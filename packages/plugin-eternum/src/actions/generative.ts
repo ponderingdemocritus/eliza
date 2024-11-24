@@ -69,8 +69,9 @@ export default {
                 worldState: WORLD_STATE,
                 queriesAvailable: AVAILABLE_QUERIES,
                 availableActions: AVAILABLE_ACTIONS,
+                currentHighLevelGoal: message.content.text,
             })) as EternumState;
-            elizaLogger.success("State updated successfully", state);
+            // elizaLogger.success("State updated successfully", state);
         }
 
         const handleStepError = (step: string) => {
@@ -96,36 +97,14 @@ export default {
             template: defineSteps,
         });
 
-        elizaLogger.log("Context composed, generating content...", context);
+        // elizaLogger.log("Context composed, generating content...", context);
         const stepsContent: StepsContent = await generateObject({
             runtime,
             context,
             modelClass: ModelClass.MEDIUM,
         });
 
-        const validateStepsContent = (content: any): StepsContent => {
-            if (!content || typeof content !== "object") {
-                throw new Error("Invalid steps content format");
-            }
-
-            if (!Array.isArray(content.steps)) {
-                // Try to handle case where steps are directly returned as array
-                if (Array.isArray(content)) {
-                    return { steps: content };
-                }
-                throw new Error("Steps must be an array");
-            }
-
-            content.steps.forEach((step: any, index: number) => {
-                if (!step.name || !step.reasoning) {
-                    throw new Error(`Invalid step format at index ${index}`);
-                }
-            });
-
-            return content;
-        };
-
-        elizaLogger.log("stepsContent", stepsContent);
+        elizaLogger.log("stepsContent", JSON.stringify(stepsContent, null, 2));
         if (!stepsContent) {
             elizaLogger.error("Failed to generate steps content");
             return handleStepError("steps definition");
@@ -144,7 +123,7 @@ export default {
             | {
                   actionType: "invoke" | "query";
                   data: string;
-                  steps: Array<Step>;
+                  nextStep: Step;
               }
             | boolean
         > => {
@@ -195,6 +174,10 @@ export default {
             elizaLogger.log(`Executing step: ${step.name}`);
             const content = await generateStep(step, state);
 
+            elizaLogger.log("content", JSON.stringify(content, null, 2));
+
+            let output: string = "";
+
             if (!content) {
                 elizaLogger.error(
                     `Step ${step.name} failed to generate content`
@@ -202,27 +185,51 @@ export default {
                 return handleStepError(step.name);
             }
 
+            // Process action type and get output
             if (typeof content === "object" && "actionType" in content) {
-                // ... existing action handling code ...
+                if (content.actionType === "invoke") {
+                    elizaLogger.log("Invoking action...");
+                    output = "Successfully invoked action: " + content.data;
+                } else if (content.actionType === "query") {
+                    elizaLogger.log("Querying...");
+                    output = "Successfully queried: " + content.data;
+                }
             }
 
-            // Update steps array with any new steps returned from generateStep
-            if (typeof content === "object" && "steps" in content) {
-                currentSteps = content.steps;
+            // Handle next step insertion
+            if (
+                typeof content === "object" &&
+                "nextStep" in content &&
+                content.nextStep &&
+                Object.keys(content.nextStep).length > 0
+            ) {
+                elizaLogger.log(
+                    `Inserting next step after current step: ${step.name}`
+                );
+                const nextStepIndex = stepIndex + 1;
+                if (
+                    nextStepIndex >= currentSteps.length ||
+                    currentSteps[nextStepIndex].name !== content.nextStep.name
+                ) {
+                    currentSteps.splice(stepIndex + 1, 0, content.nextStep);
+                }
             }
 
             // Update state with current progress
+            const nextStep = currentSteps[stepIndex + 1];
+
+            console.log(currentSteps);
             state = (await runtime.composeState(message, {
                 ...state,
                 allSteps: currentSteps,
-                currentStepTitle: currentSteps[stepIndex + 1]?.name,
-                currentStepReasoning: currentSteps[stepIndex + 1]?.reasoning,
+                currentStepTitle: nextStep?.name || null,
+                currentStepReasoning: nextStep?.reasoning || null,
+                output,
             })) as EternumState;
 
             elizaLogger.success(`Step ${step.name} completed successfully`);
             stepIndex++;
         }
-
         // TODO: After this happens we need to evaluate how the action went
         // and if it was successful or not. If it was succesful we should store it in memory as an action to do xyz. This way
         // we know this action works for the task.
@@ -253,6 +260,20 @@ export default {
                 user: "{{user1}}",
                 content: {
                     text: "Can you build me a Realm/house/castle/tower?",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    text: "Sure thing! I'll get started on that right away.",
+                },
+            },
+        ],
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "Buy me some gold?",
                 },
             },
             {
