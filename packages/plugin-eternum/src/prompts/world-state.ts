@@ -2,7 +2,11 @@
 
 export const WORLD_STATE = `
 
-Your Realm ids are 1,2,3 
+Your Realms are:
+
+Slipslop: 1
+Flippyland: 2
+Flopsymopsyland: 3
 
 You have:
 

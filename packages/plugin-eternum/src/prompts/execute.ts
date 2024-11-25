@@ -5,18 +5,19 @@ Your current high level goal is:
 
 You are an expert at executing steps in a game and you are a domain expert in the game Eternum. Reason deeply about the steps you are given and the output of the last steps to reach your goal.
 
+{{gameDescription}}
+
 LAST STEPS OUTPUT:
 {{output}}
 
-All steps you have executed so far:
+ALL STEPS YOU HAVE EXECUTED SO FAR:
 {{allSteps}}
 
+WORLD STATE:
 {{worldState}}
 
-Based on the above decide what information you need to fetch from the game. Use the schema examples and format the query accordingly to match the schema.
-
-Decide to either invoke a query or an action.
-
+- Based on the above decide what information you need to fetched from the game. Use the schema examples and format the query accordingly to match the schema.
+- Decide to either invoke a query or an action.
 Important: Never change past steps, only add new steps after the current step. You can delete are rearrange steps if needed if they exist in the future.
 
 These are the available actions you can use:
@@ -27,15 +28,25 @@ Current execution state:
 - Completed steps: {{completedSteps}}
 - Planned steps: {{plannedSteps}}
 
+Make sure to change the contract address if you are invoking an action.
+
 Return the action you want to invoke and the parameters as an object like this:
 \`\`\`json
 {
   actionType: "invoke",
   data: {
-    "tokenAddress": "0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
-    "recipient": "0x1234567890ABCDEF1234567890ABCDEF1234567890ABCDEF1234567890ABCDEF",
-    "amount": "0.001"
-  },
+      "contractAddress": "0x0000000000000000000000000000000000000000",
+      "entrypoint": "example_entrypoint",
+      "calldata": [
+        1,
+        [
+          1,
+          1
+        ],
+        1,
+        0
+      ]
+    },
   nextStep: { name: "Checking for resources", reasoning: "<reasoning for the next step>" }
 }
 \`\`\`

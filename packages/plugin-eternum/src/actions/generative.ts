@@ -9,14 +9,14 @@ import {
     type Action,
 } from "@ai16z/eliza";
 import { validateStarknetConfig } from "../enviroment";
+import { defineSteps, stepTemplate } from "../prompts/execute";
+import { PROVIDER_EXAMPLES } from "../prompts/provider-examples";
+import { AVAILABLE_QUERIES } from "../prompts/queries-available";
+import { WORLD_GUIDE } from "../prompts/world-guide";
+import { WORLD_STATE } from "../prompts/world-state";
 import { fetchData } from "../providers";
 import { EternumState } from "../types";
 import { composeContext } from "../utils";
-import { defineSteps, stepTemplate } from "../utils/execute";
-import { WORLD_STATE } from "./dummy";
-import { PROVIDER_EXAMPLES } from "./provider-examples";
-import { AVAILABLE_QUERIES } from "./queries-available";
-import { WORLD_GUIDE } from "./world-guide";
 
 interface Step {
     name: string;
@@ -102,6 +102,14 @@ export default {
 
         console.log("stepsContent", stepsContent);
 
+        callback?.({
+            text: `Processing steps: ${JSON.stringify(stepsContent, null, 2)}`,
+            content: {
+                worldState: state.worldState,
+                steps: stepsContent,
+            },
+        });
+
         elizaLogger.log("stepsContent", JSON.stringify(stepsContent, null, 2));
         if (!stepsContent) {
             elizaLogger.error("Failed to generate steps content");
@@ -144,14 +152,24 @@ export default {
 
             if (typeof content === "string") {
                 try {
-                    // Remove any potential control characters before parsing
-                    const sanitizedContent = content.replace(
-                        /[\x00-\x1F\x7F-\x9F]/g,
-                        ""
-                    );
-                    return JSON.parse(sanitizedContent);
+                    // Enhanced sanitization of the JSON string
+                    const sanitizedContent = content
+                        .replace(/[\x00-\x1F\x7F-\x9F]/g, "") // Remove control characters
+                        .replace(/\\[^"\/bfnrtu]/g, "\\\\") // Escape invalid escape sequences
+                        .replace(/\u0000-\u0019/g, ""); // Remove ASCII control characters
+
+                    try {
+                        return JSON.parse(sanitizedContent);
+                    } catch (parseError) {
+                        elizaLogger.error("JSON Parse Error:", parseError);
+                        elizaLogger.error(
+                            "Sanitized Content:",
+                            sanitizedContent
+                        );
+                        return false;
+                    }
                 } catch (e) {
-                    elizaLogger.error("Failed to parse step content:", e);
+                    elizaLogger.error("Content Sanitization Error:", e);
                     return false;
                 }
             }
@@ -257,6 +275,15 @@ export default {
             })) as EternumState;
 
             elizaLogger.success(`Step ${step.name} completed successfully`);
+
+            callback?.({
+                text: `Thinking: ${step.name} - ${step.reasoning}`,
+                content: {
+                    worldState: state.worldState,
+                    steps: currentSteps,
+                },
+            });
+
             stepIndex++;
         }
         // TODO: After this happens we need to evaluate how the action went
