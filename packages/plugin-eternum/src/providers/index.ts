@@ -1,4 +1,18 @@
-import { elizaLogger } from "@ai16z/eliza";
+import { elizaLogger, IAgentRuntime } from "@ai16z/eliza";
+import { createDojoConfig } from "@dojoengine/core";
+import { Account, RpcProvider } from "starknet";
+import devManifest from "../../../../../contracts/manifest_dev.json";
+
+const VITE_PUBLIC_MASTER_ADDRESS =
+    "0x01BFC84464f990C09Cc0e5D64D18F54c3469fD5c467398BF31293051bAde1C39";
+const VITE_PUBLIC_MASTER_PRIVATE_KEY =
+    "0x075362a844768f31c8058ce31aec3dd7751686440b4f220f410ae0c9bf042e60";
+const VITE_PUBLIC_ACCOUNT_CLASS_HASH =
+    "0x07dc7899aa655b0aae51eadff6d801a58e97dd99cf4666ee59e704249e51adf2";
+const VITE_PUBLIC_TORII = "https://api.cartridge.gg/x/eternum-rc-sepolia/torii";
+const VITE_PUBLIC_NODE_URL = "https://api.cartridge.gg/x/starknet/sepolia";
+const VITE_PUBLIC_TORII_RELAY =
+    "/dns4/api.cartridge.gg/tcp/443/x-parity-wss/%2Fx%2Feternum-rc-sepolia%2Ftorii%2Fwss";
 
 interface GraphQLResponse<T> {
     data?: T;
@@ -16,7 +30,7 @@ async function queryGraphQL<T>(
     endpoint: string,
     query: string,
     variables?: Record<string, unknown>
-): Promise<T> {
+): Promise<T | Error> {
     try {
         const response = await fetch(endpoint, {
             method: "POST",
@@ -32,75 +46,67 @@ async function queryGraphQL<T>(
         const result = (await response.json()) as GraphQLResponse<T>;
 
         if (result.errors) {
-            throw new Error(result.errors[0].message);
+            return new Error(result.errors[0].message);
         }
 
         if (!result.data) {
-            throw new Error("No data returned from GraphQL query");
+            return new Error("No data returned from GraphQL query");
         }
 
         return result.data;
     } catch (error) {
         elizaLogger.error("GraphQL query failed:", error);
-        throw error;
+        return error instanceof Error
+            ? error
+            : new Error("Unknown error occurred");
     }
 }
 
-// 1.  fetch graphgl schema from game cache.
-
-const message = `
-{{goals}}
-
-{{worldState}} -> general world state
-
-{{query}} - all graphql queries possible. 
-
-Based on the above decide what information you need to fetch from the game. Use the schema examples and format the query accordingly to match the schema.
-
-Return the query and parameters as an object like this:
-
-\`\`\`
-{
-  query: <query>,
-  variables: {
-    // variables go here
-  }
-}
-  \`\`\`
-`;
-
-const fetchData = async (query: string, variables: Record<string, unknown>) => {
-    await queryGraphQL<string>("https://api.eternum.io/graphql", query, {
+export const fetchData = async (
+    query: string,
+    variables: Record<string, unknown>
+) => {
+    return await queryGraphQL<string>(VITE_PUBLIC_TORII + "/graphql", query, {
         variables,
     });
 };
 
-const messages = `
-{{goals}}
+export const dojoConfig = createDojoConfig({
+    rpcUrl: VITE_PUBLIC_NODE_URL,
+    toriiUrl: VITE_PUBLIC_TORII,
+    relayUrl: VITE_PUBLIC_TORII_RELAY,
+    masterAddress: VITE_PUBLIC_MASTER_ADDRESS,
+    masterPrivateKey: VITE_PUBLIC_MASTER_PRIVATE_KEY,
+    accountClassHash:
+        VITE_PUBLIC_ACCOUNT_CLASS_HASH ||
+        "0x07dc7899aa655b0aae51eadff6d801a58e97dd99cf4666ee59e704249e51adf2",
+    feeTokenAddress: "0x0",
+    manifest: devManifest,
+});
 
-{{world state}}
+// export const eternumProvider = new DojoProvider(dojoConfig);
 
-{{fetchedQuery}}
+export const getStarknetProvider = (runtime: IAgentRuntime) => {
+    return new RpcProvider({
+        nodeUrl: runtime.getSetting("STARKNET_RPC_URL") || "",
+    });
+};
 
-{{availableActions}} -> all execution functions agailabble. It will be xample of all the calldata.
+export const getStarknetAccount = (runtime: IAgentRuntime) => {
+    return new Account(
+        getStarknetProvider(runtime),
+        runtime.getSetting("STARKNET_ADDRESS") || "",
+        runtime.getSetting("STARKNET_PRIVATE_KEY") || ""
+    );
+};
 
-Based on the above, decide what action to take. If no action to take return false
-
-Only return the calldata of the action to take. Like this
-
-\`\`\`
-    {
-        contractAddress: contractName,
-        entrypoint: "create_order",
-        calldata: [
-            maker_id,
-            maker_gives_resources.length / 2,
-            ...maker_gives_resources,
-            taker_id,
-            taker_gives_resources.length / 2,
-            ...taker_gives_resources,
-            expires_at,
-        ],
-    }
-\`\`\`
-`;
+// export const callEternum = async (
+//     runtime: IAgentRuntime,
+//     call: Call
+// ): Promise<any> => {
+//     return eternumProvider.execute(
+//         getStarknetAccount(runtime),
+//         call,
+//         "eternum"
+//     ) as Promise<any>;
+// };

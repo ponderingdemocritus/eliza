@@ -1,6 +1,3 @@
-// TODO: Implement this for Starknet.
-// It should just transfer tokens from the agent's wallet to the recipient.
-
 import {
     ActionExample,
     elizaLogger,
@@ -12,15 +9,14 @@ import {
     type Action,
 } from "@ai16z/eliza";
 import { validateStarknetConfig } from "../enviroment";
+import { fetchData } from "../providers";
 import { EternumState } from "../types";
 import { composeContext } from "../utils";
 import { defineSteps, stepTemplate } from "../utils/execute";
-import {
-    AVAILABLE_ACTIONS,
-    AVAILABLE_QUERIES,
-    GAME_DESCRIPTION,
-    WORLD_STATE,
-} from "./dummy";
+import { WORLD_STATE } from "./dummy";
+import { PROVIDER_EXAMPLES } from "./provider-examples";
+import { AVAILABLE_QUERIES } from "./queries-available";
+import { WORLD_GUIDE } from "./world-guide";
 
 interface Step {
     name: string;
@@ -40,7 +36,7 @@ export default {
         elizaLogger.success("Starknet configuration validated successfully");
         return true;
     },
-    description: `If a user asks you to do something that is related to this ${GAME_DESCRIPTION}, use this action to generate a plan to do it.`,
+    description: `If a user asks you to do something that is related to this ${WORLD_GUIDE}, use this action to generate a plan to do it.`,
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,
@@ -56,19 +52,19 @@ export default {
         if (!state) {
             elizaLogger.log("No existing state found, creating new state");
             state = (await runtime.composeState(message, {
-                gameDescription: GAME_DESCRIPTION,
+                gameDescription: WORLD_GUIDE,
                 worldState: WORLD_STATE,
                 queriesAvailable: AVAILABLE_QUERIES,
-                availableActions: AVAILABLE_ACTIONS,
+                availableActions: PROVIDER_EXAMPLES,
             })) as EternumState;
             elizaLogger.success("New state created successfully");
         } else {
             elizaLogger.log("Updating existing state");
             state = (await runtime.updateRecentMessageState(state, {
-                gameDescription: GAME_DESCRIPTION,
+                gameDescription: WORLD_GUIDE,
                 worldState: WORLD_STATE,
                 queriesAvailable: AVAILABLE_QUERIES,
-                availableActions: AVAILABLE_ACTIONS,
+                availableActions: PROVIDER_EXAMPLES,
                 currentHighLevelGoal: message.content.text,
             })) as EternumState;
             // elizaLogger.success("State updated successfully", state);
@@ -103,6 +99,8 @@ export default {
             context,
             modelClass: ModelClass.MEDIUM,
         });
+
+        console.log("stepsContent", stepsContent);
 
         elizaLogger.log("stepsContent", JSON.stringify(stepsContent, null, 2));
         if (!stepsContent) {
@@ -143,6 +141,20 @@ export default {
                 modelClass: ModelClass.MEDIUM,
             });
             // elizaLogger.success("Step content generated successfully", content);
+
+            if (typeof content === "string") {
+                try {
+                    // Remove any potential control characters before parsing
+                    const sanitizedContent = content.replace(
+                        /[\x00-\x1F\x7F-\x9F]/g,
+                        ""
+                    );
+                    return JSON.parse(sanitizedContent);
+                } catch (e) {
+                    elizaLogger.error("Failed to parse step content:", e);
+                    return false;
+                }
+            }
 
             return content;
         };
@@ -192,7 +204,24 @@ export default {
                     output = "Successfully invoked action: " + content.data;
                 } else if (content.actionType === "query") {
                     elizaLogger.log("Querying...");
-                    output = "Successfully queried: " + content.data;
+
+                    //  TODO: Types
+                    const contentData =
+                        typeof content.data === "string"
+                            ? JSON.parse(content.data)
+                            : content.data;
+
+                    const data = await fetchData(
+                        contentData.query,
+                        contentData.variables
+                    );
+                    output =
+                        "Successfully queried: " +
+                        JSON.stringify(content.data) +
+                        "returned: " +
+                        JSON.stringify(data, null, 2);
+
+                    elizaLogger.log("output", output);
                 }
             }
 
