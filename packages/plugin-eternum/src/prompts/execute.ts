@@ -44,7 +44,7 @@ Return the action you want to invoke and the parameters as an object like this:
           1
         ],
         1,
-        0
+        0,
       ]
     },
   nextStep: { name: "Checking for resources", reasoning: "<reasoning for the next step>" }
@@ -73,6 +73,7 @@ IMPORTANT RULES FOR STEP HANDLING:
 1. Base the next step on new information learned from the last steps output: {{output}}
 2. See what would be the next step based on the current step and the goal.
 3. If you don't think another step is needed just return an empty nextStep {}.
+4. Don't add comments or use "//" in the JSON object.
 
 Make sure to only return one object like above depending on the action you want to take.
 `;
