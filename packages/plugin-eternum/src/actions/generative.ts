@@ -8,13 +8,14 @@ import {
     ModelClass,
     type Action,
 } from "@ai16z/eliza";
+import { Call } from "starknet";
 import { validateStarknetConfig } from "../enviroment";
 import { defineSteps, stepTemplate } from "../prompts/execute";
 import { PROVIDER_EXAMPLES } from "../prompts/provider-examples";
 import { AVAILABLE_QUERIES } from "../prompts/queries-available";
 import { WORLD_GUIDE } from "../prompts/world-guide";
 import { WORLD_STATE } from "../prompts/world-state";
-import { fetchData } from "../providers";
+import { callEternum, fetchData, getRealmState } from "../providers";
 import { EternumState } from "../types";
 import { composeContext } from "../utils";
 
@@ -67,7 +68,7 @@ export default {
                 availableActions: PROVIDER_EXAMPLES,
                 currentHighLevelGoal: message.content.text,
             })) as EternumState;
-            // elizaLogger.success("State updated successfully", state);
+            elizaLogger.success("State updated successfully", state);
         }
 
         const handleStepError = (step: string) => {
@@ -127,15 +128,13 @@ export default {
             state: EternumState
         ): Promise<
             | {
-                  actionType: "invoke" | "query";
+                  actionType: "invoke" | "query" | "getRealmState";
                   data: string;
                   nextStep: Step;
               }
             | boolean
         > => {
-            elizaLogger.log(
-                `Generating step with template: ${step.name.substring(0, 100)}...`
-            );
+            elizaLogger.log(`Generating step with template: ${step.name}...`);
 
             const context = composeContext({
                 state,
@@ -219,7 +218,18 @@ export default {
             if (typeof content === "object" && "actionType" in content) {
                 if (content.actionType === "invoke") {
                     elizaLogger.log("Invoking action...");
-                    output = "Successfully invoked action: " + content.data;
+
+                    elizaLogger.log(
+                        "Invoking action: " +
+                            JSON.stringify(content.data, null, 2)
+                    );
+
+                    output =
+                        "Invoked with this response: " +
+                        (await callEternum(
+                            runtime,
+                            content.data as unknown as Call
+                        ));
                 } else if (content.actionType === "query") {
                     elizaLogger.log("Querying...");
 
@@ -240,6 +250,12 @@ export default {
                         JSON.stringify(data, null, 2);
 
                     elizaLogger.log("output", output);
+                } else if (content.actionType === "getRealmState") {
+                    elizaLogger.log("Getting realm state...");
+                    const realmState = await getRealmState(
+                        content.data as unknown as number
+                    );
+                    output = "Realm state: " + realmState;
                 }
             }
 

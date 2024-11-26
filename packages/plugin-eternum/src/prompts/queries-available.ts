@@ -5,6 +5,20 @@ YOU MUST FOLLOW THESE STEPS:
 1. Introspect the schema with the following, replace the model name. You should do this if you don't know the fields available to a model.
 2. With the understanding of the schema, create a query using the structure that exists
 
+For all transactions you will need the entity_id of the realm you are building on which you can get with the following query:
+
+query {
+  eternumRealmModels (where: {realm_id: 6671}) {
+    edges {
+      node {
+        ... on eternum_Realm {
+          entity_id
+        }
+      }
+    }
+  }
+}
+
 This is a graphql query example, you can see the structure that exists, then dynamically create queries.
 {
   eternumAcceptOrderModels	 {

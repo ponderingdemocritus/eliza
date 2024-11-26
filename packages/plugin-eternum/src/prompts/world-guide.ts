@@ -2,11 +2,16 @@ export const WORLD_GUIDE = `WORLD GUIDE
 
 Contract Addresses:
 - eternum-trade_systems: 0x1234567890ABCDEF1234567890ABCDEF1234567890ABCDEF1234567890ABCDEF
-- eternum-building_systems: 0x1234567890ABCDEF1234567890ABCDEF1234567890ABCDEF1234567890ABCDEF
+- eternum-building_systems: 0x36b82076142f07fbd8bf7b2cabf2e6b190082c0b242c6ecc5e14b2c96d1763c
 
 Buying a Resource
 1. Look at the market data -> fetch with eternum_Orders
 2. Then accept an order with the correct eternum_AcceptOrder model
+
+Building a Building
+1. Check what buildings you have with eternum_Building and locations
+2. If you don't have the building, check the cost with eternum_BuildingCost passing in the building id
+3. If you have enough resources, use eternum_CreateBuilding to build the building
 
 BUILDING COSTS
 Market: 750000 Fish, 125000 Stone, 50000 Obsidian, 25000 Ruby, 5000 DeepCrystal
@@ -17,6 +22,25 @@ Workers Hut: 300000 Wheat, 75000 Stone, 75000 Wood, 75000 Coal
 Storehouse: 1000000 Fish, 75000 Coal, 75000 Stone, 10000 Sapphire
 Farm: 450000 Fish
 Fishing Village: 450000 Wheat
+
+BUILDING POPULATION
+// this is the amount of population each building adds to your realm. You need to have enough population free to support the building. You can check your current population with eternum_Population
+None: 0
+Castle: 0
+Bank: 0
+Fragment Mine: 0
+Resource: 2
+Farm: 1
+Fishing Village: 1
+Barracks: 2
+Market: 3
+Archery Range: 2
+Stable: 3
+Trading Post: 2
+Workers Hut: 0
+Watch Tower: 2
+Walls: 2
+Storehouse: 2
 
 
 RESOURCE IDS
@@ -51,9 +75,45 @@ Lords = 253,
 Wheat = 254,
 Fish = 255,
 
+BUILDING DESCRIPTIONS
+Castle: Where the heart of your realm beats, the Castle is the foundation of your kingdom.
+Bank: Banks, where the wealth of the land flows, store the riches of your realm.
+Fragment Mine: Fragment Mines, where the earth's magic is harnessed, produce Ancient Fragments.
+Resource: Resource buildings, harnessing the land's magic, produce essential resources.
+Farm: Enchanted Farms, blessed by Gaia, yield golden wheat.
+Fishing Village: Mystical Fishing Villages, guided by the Moon, harvest the bounty of the seas of Fish
+Barracks: Barracks, where valor and magic intertwine, train noble Knights.
+Market: Markets, bustling with arcane traders, summon Donkeys for mystical trading.
+Archery Range: Archery Ranges, under the watchful eyes of elven masters, train Crossbow men.
+Stable: Stables, infused with ancient spirits, summon valiant Paladins.
+Trading Post: Trading Posts, at the crossroads of destiny, expand the horizons of trade.
+Workers Hut: Workers Huts, blessed by the ancestors, expand the heart of your realm allowing for greater capacity.
+Watch Tower: Watch Towers, piercing the veils of fog, extend the gaze of your kingdom.
+Walls: Walls, imbued with the strength of titans, fortify your domain against the shadows.
+Storehouse: Storehouses, where abundance flows, swell with the wealth of the land.
+
+ 
+1. get position of realm and the outer x and y coordinates
+2. query the buildings that exist out x and y coordinates
 
 
-Build Farm
-1. Check your base with eternum_Building to see what buildings exist
-2. If you have the resources, use eternum_CreateBuilding to build a farm
+BUILDING TYPES
+None = 0
+Castle = 1
+Resource = 2
+Farm = 3
+Fishing Village = 4
+Barracks = 5
+Market = 6
+Archery Range = 7
+Stable = 8
+Trading Post = 9
+Workers Hut = 10
+Watch Tower = 11
+Walls = 12
+Storehouse = 13
+Bank = 14
+Fragment Mine = 15
+
+
 `;

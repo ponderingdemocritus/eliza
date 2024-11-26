@@ -1,4 +1,9 @@
-export const PROVIDER_EXAMPLES = `Eternum Provider Examples
+export const PROVIDER_EXAMPLES = `
+
+Use these to call functions.
+
+IMPORTANT RULES:
+1. If you receive an error, you may need to try again, the error message should tell you what went wrong.
 
 create_order
 ============
@@ -126,6 +131,18 @@ Parameters:
 - produce_resource_type: Type of resource the building will produce
 - signer: Account executing the transaction
 
+Note - this is how you determine the coordinates of the building:
+The building is a flat hexagon grid.
+- There is a castle at (10,10) - you can't build here ever.
+- East = 1
+- NorthEast = 2
+- NorthWest = 3
+- West = 4
+- SouthWest = 5
+- SouthEast = 6
+
+Make sure to include the { Some: 1 } in the call data for the resource type. Farms and fishing villages are always 0.
+
 Example:
 * // Create a wood production building at coordinates determined by directions [1,2]
    * {
@@ -133,9 +150,11 @@ Example:
    *   entrypoint: "create",
    *   calldata: [
    *     123,     // entity_id
-   *     [1, 2],  // directions array
+   *     [1],// Building east of castle
    *     1,       // building_category (e.g. 1 for resource production)
-   *     1        // produce_resource_type (e.g. 1 for wood) for farms and fishing villages use 0
+   *     {
+   *       Some: 1 // resource type (wood) Farms and fishing villages are always 0
+   *     },
    *   ]
    * }
    *
