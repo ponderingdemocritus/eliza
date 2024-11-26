@@ -4,6 +4,7 @@ Use this to query for information about the game.
 YOU MUST FOLLOW THESE STEPS:
 1. Introspect the schema with the following, replace the model name. You should do this if you don't know the fields available to a model.
 2. With the understanding of the schema, create a query using the structure that exists
+3. Only use the Realm entity_id in queries, unless you are finding the entity_id with the Realm id
 
 For all transactions you will need the entity_id of the realm you are building on which you can get with the following query:
 
@@ -18,6 +19,34 @@ query {
     }
   }
 }
+
+To get the resources and the buildings of a realm, you can use the following query:
+
+query {
+  eternumResourceModels (where: {entity_id: 62}, limit: 100) {
+    edges {
+      node {
+        ... on eternum_Resource {
+          resource_type
+          balance
+        }
+      }
+    }
+  }
+  eternumBuildingModels (where: {outer_col: 2147483646, outer_row: 2147483671})  {
+    edges {
+      node {
+        ... on eternum_Building {
+          category
+          entity_id
+          inner_col
+          inner_row
+        }
+      }
+    }
+  }
+}
+  
 
 This is a graphql query example, you can see the structure that exists, then dynamically create queries.
 {

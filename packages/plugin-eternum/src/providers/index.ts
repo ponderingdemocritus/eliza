@@ -115,17 +115,11 @@ export const callEternum = async (
     call: Call
 ): Promise<any> => {
     call.entrypoint = call.entrypoint;
+
     // Check if calldata contains CairoOption object and replace it
-    if (
-        call.calldata &&
-        Array.isArray(call.calldata) &&
-        call.calldata.some((item) => typeof item === "object" && "Some" in item)
-    ) {
+    if (call.calldata && Array.isArray(call.calldata)) {
         call.calldata = call.calldata.map((item) => {
-            if (
-                typeof item === "object" &&
-                ("Some" in item || "None" in item)
-            ) {
+            if (typeof item === "object" && "Some" in item) {
                 if ("Some" in item) {
                     if (item.Some === 0) {
                         return new CairoOption<Number>(
@@ -144,9 +138,9 @@ export const callEternum = async (
             return item;
         });
     }
-    call.calldata = CallData.compile(call.calldata ? [call.calldata] : []);
 
-    console.log(call.calldata);
+    call.calldata = CallData.compile(call.calldata || []);
+
     const { transaction_hash } =
         await getStarknetAccount(runtime).execute(call);
 

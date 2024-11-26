@@ -111,6 +111,8 @@ IMPORTANT RULES FOR STEP PRODUCTION:
 4. If you a step fails - keep going.
 5. Never go further than 10 steps
 6. Always replace <inserts> with the actual values. This is essential for contract addresses and other values that are dynamic.
+7. Never include the same step twice, unless you have a good reason to do so.
+8. Never do a transaction to check something, only do transactions to execute actions. User Queries 
 
 IMPORTANT LOGIC:
 1. You should always verify the cost of actions before executing them.

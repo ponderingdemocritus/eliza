@@ -1,5 +1,5 @@
 import settings from "./settings.ts";
-import { Models, ModelProviderName, ModelClass } from "./types.ts";
+import { ModelClass, ModelProviderName, Models } from "./types.ts";
 
 export const models: Models = {
     [ModelProviderName.OPENAI]: {
@@ -25,9 +25,9 @@ export const models: Models = {
             stop: [],
             maxInputTokens: 200000,
             maxOutputTokens: 8192,
-            frequency_penalty: 0.4,
-            presence_penalty: 0.4,
-            temperature: 0.7,
+            frequency_penalty: 0.0,
+            presence_penalty: 0.0,
+            temperature: 0.3,
         },
         endpoint: "https://api.anthropic.com/v1",
         model: {
