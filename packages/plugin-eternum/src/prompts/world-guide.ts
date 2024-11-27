@@ -75,7 +75,7 @@ Lords = 253,
 Wheat = 254,
 Fish = 255,
 
-BUILDING DESCRIPTIONS
+BUILDING DESCRIPTIONS: You can build buildings anywhere within your realm.
 Castle: Where the heart of your realm beats, the Castle is the foundation of your kingdom.
 Bank: Banks, where the wealth of the land flows, store the riches of your realm.
 Fragment Mine: Fragment Mines, where the earth's magic is harnessed, produce Ancient Fragments.

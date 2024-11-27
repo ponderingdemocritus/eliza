@@ -1,12 +1,5 @@
 import { elizaLogger, IAgentRuntime } from "@ai16z/eliza";
-import {
-    Account,
-    CairoOption,
-    CairoOptionVariant,
-    Call,
-    CallData,
-    RpcProvider,
-} from "starknet";
+import { Account, Call, CallData, RpcProvider } from "starknet";
 
 const VITE_PUBLIC_MASTER_ADDRESS =
     "0x3bed7e5d89967495c2bfdcbda5dc8ada87aea66a3289abe7bb0d3cdea2b720";
@@ -114,69 +107,23 @@ export const callEternum = async (
     runtime: IAgentRuntime,
     call: Call
 ): Promise<any> => {
-    call.entrypoint = call.entrypoint;
+    try {
+        call.calldata = CallData.compile(call.calldata || []);
 
-    // Check if calldata contains CairoOption object and replace it
-    if (call.calldata && Array.isArray(call.calldata)) {
-        call.calldata = call.calldata.map((item) => {
-            if (typeof item === "object" && "Some" in item) {
-                if ("Some" in item) {
-                    if (item.Some === 0) {
-                        return new CairoOption<Number>(
-                            CairoOptionVariant.None,
-                            0
-                        );
-                    }
-                    return new CairoOption<Number>(
-                        CairoOptionVariant.Some,
-                        item.Some
-                    );
-                } else {
-                    return new CairoOption<Number>(CairoOptionVariant.None, 0);
-                }
+        console.log("Calling Eternum:", call);
+
+        const { transaction_hash } =
+            await getStarknetAccount(runtime).execute(call);
+
+        return await getStarknetAccount(runtime).waitForTransaction(
+            transaction_hash,
+            {
+                retryInterval: 1000,
             }
-            return item;
-        });
-    }
-
-    call.calldata = CallData.compile(call.calldata || []);
-
-    const { transaction_hash } =
-        await getStarknetAccount(runtime).execute(call);
-
-    return await getStarknetAccount(runtime).waitForTransaction(
-        transaction_hash
-    );
-};
-
-export const getRealmState = async (entityId: number) => {
-    const resources: any = await fetchData(
-        `query {
-            eternumResourceModels (where: {entity_id: ${entityId}}, limit: 100) {
-                edges {
-                    node {
-                        ... on eternum_Resource {
-                            resource_type
-                            balance
-                        }
-                    }
-                }
-            }
-        }`,
-        {}
-    );
-
-    // Format resource data into string mapping
-    const formattedResources =
-        resources.data.eternumResourceModels.edges.reduce(
-            (acc: string[], edge: any) => {
-                const resourceType = edge.node.resource_type;
-                const balance = parseInt(edge.node.balance, 16);
-                acc.push(`${resourceType}: ${balance}`);
-                return acc;
-            },
-            []
         );
-
-    return formattedResources.join("\n");
+    } catch (error) {
+        return error instanceof Error
+            ? error
+            : new Error("Unknown error occurred");
+    }
 };

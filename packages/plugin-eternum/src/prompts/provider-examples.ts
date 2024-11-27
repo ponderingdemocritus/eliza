@@ -4,6 +4,7 @@ Use these to call functions.
 
 IMPORTANT RULES:
 1. If you receive an error, you may need to try again, the error message should tell you what went wrong.
+2. To verify a successful transaction, read the response you get back. You don't need to query anything.
 
 create_order
 ============
@@ -122,39 +123,72 @@ Example:
 create_building
 ===============
 
-*
+Creates a new building for a realm on the hexagonal grid map.
 
 Parameters:
-- entity_id: ID of the entity creating the building
-- directions: Array of directions for building placement
-- building_category: Category of building to create
-- produce_resource_type: Type of resource the building will produce
-- signer: Account executing the transaction
+- entity_id: ID of the realm creating the building
+- directions: Array of directions from castle to building location
+- building_category: Type of building (1 = resource production, 2 = military, etc)
+- produce_resource_type: Resource type ID this building will produce (required for resource buildings) - This should be greater than 0 always.
 
-Note - this is how you determine the coordinates of the building:
-The building is a flat hexagon grid.
-- There is a castle at (10,10) - you can't build here ever.
-- East = 1
-- NorthEast = 2
-- NorthWest = 3
-- West = 4
-- SouthWest = 5
-- SouthEast = 6
+Building Placement:
+The map uses a hexagonal grid with the realm's castle at the center. Buildings are placed by specifying directions from the castle:
+- 0: East 
+- 1: Northeast
+- 2: Northwest  
+- 3: West
+- 4: Southwest
+- 5: Southeast
 
-Make sure to include the { Some: 1 } in the call data for the resource type. Farms and fishing villages are always 0.
+Important Notes:
+- Cannot build on castle location
+- Resource type must be > 0 for resource production buildings
+- Farms (food) and fishing villages use resource type 0
+- Building location is determined by following the directions array from the castle
+- Higher realm levels allow building further from castle
+- Always include at least 1 as the final
 
-Example:
-* // Create a wood production building at coordinates determined by directions [1,2]
-   * {
+RESOURCE IDS
+Stone = 1,
+Coal = 2,
+Wood = 3,
+Copper = 4,
+Ironwood = 5,
+Obsidian = 6,
+Gold = 7,
+Silver = 8,
+Mithral = 9,
+AlchemicalSilver = 10,
+ColdIron = 11,
+DeepCrystal = 12,
+Ruby = 13,
+Diamonds = 14,
+Hartwood = 15,
+Ignium = 16,
+TwilightQuartz = 17,
+TrueIce = 18,
+Adamantine = 19,
+Sapphire = 20,
+EtherealSilica = 21,
+Dragonhide = 22,
+AncientFragment = 29,
+Donkey = 249,
+Knight = 250,
+Crossbowman = 251,
+Paladin = 252,
+Lords = 253,
+Wheat = 254,
+Fish = 255,
+
+Example - Create a wood production building northeast of castle:
+* {
    *   contractAddress: "<eternum-building_systems>",
-   *   entrypoint: "create",
+   *   entrypoint: "create", 
    *   calldata: [
-   *     123,     // entity_id
-   *     [1],// Building east of castle
-   *     1,       // building_category (e.g. 1 for resource production)
-   *     {
-   *       Some: 1 // resource type (wood) Farms and fishing villages are always 0
-   *     },
+   *     123,    // entity_id - ID of the realm
+   *     [1],    // directions - [1] means build northeast of castle
+   *     1,      // building_category - 1 for resource production
+   *     1       // produce_resource_type - 1 for wood production
    *   ]
    * }
    *

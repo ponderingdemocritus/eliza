@@ -68,15 +68,6 @@ Return the query you want to invoke and the variables as an object like this:
   nextStep: { name: "Checking for resources", reasoning: "<reasoning for the next step>" }
 }
 
-The is a function you can use to get the realm resources values, just return the entityId which in this case is 6671, this will get you the resources in the realm:
-\`\`\`json
-{
-  "actionType": "getRealmState",
-  "data": 6671,
-  nextStep: { name: "Checking for resources", reasoning: "<reasoning for the next step>" }
-}
-\`\`\`
-
 IMPORTANT RULES FOR STEP HANDLING:
 1. Base the next step on new information learned from the last steps output: {{output}}
 2. See what would be the next step based on the current step and the goal.
@@ -121,6 +112,7 @@ IMPORTANT LOGIC:
 IMPORT LOGIC IN RETURNING STEPS:
 1. Only return name and reasoning in the json, never include other fields.
 2. Always replace <inserts> with the actual values. This is essential for contract addresses and other values that are dynamic.
+3. If in doubt, just return an empty step - it's better to err on the side of caution, then to just keep going forever.
 
 \`\`\`json
 [

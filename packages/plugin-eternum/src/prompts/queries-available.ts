@@ -4,7 +4,7 @@ Use this to query for information about the game.
 YOU MUST FOLLOW THESE STEPS:
 1. Introspect the schema with the following, replace the model name. You should do this if you don't know the fields available to a model.
 2. With the understanding of the schema, create a query using the structure that exists
-3. Only use the Realm entity_id in queries, unless you are finding the entity_id with the Realm id
+3. Only use entity_id in queries, unless you are finding the entity_id with the $REALM_ID
 
 For all transactions you will need the entity_id of the realm you are building on which you can get with the following query:
 
@@ -20,10 +20,23 @@ query {
   }
 }
 
-To get the resources and the buildings of a realm, you can use the following query:
-
+You can get the outer_col(x) and outer_row (y) of a realm with the following query, you need this information to find the resources and buildings of a realm:
 query {
-  eternumResourceModels (where: {entity_id: 62}, limit: 100) {
+  eternumPositionModels (where: {entity_id: $ENTITY_ID}, limit: 100)  {
+    edges {
+      node {
+        ... on eternum_Position {
+          x
+          y
+        }
+      }
+    }
+  }
+}
+
+To get the resources and the buildings of a realm, you can use the following query:
+query {
+  eternumResourceModels (where: {entity_id: $ENTITY_ID}, limit: 100) {
     edges {
       node {
         ... on eternum_Resource {
@@ -33,7 +46,7 @@ query {
       }
     }
   }
-  eternumBuildingModels (where: {outer_col: 2147483646, outer_row: 2147483671})  {
+  eternumBuildingModels (where: {outer_col: $X, outer_row: $Y})  {
     edges {
       node {
         ... on eternum_Building {
@@ -65,7 +78,7 @@ This is a graphql query example, you can see the structure that exists, then dyn
 This is how you introspect the schema, replace the model name.
 
 query {
-  __type(name: "eternum_AcceptOrder") {
+  __type(name: "$MODEL_NAME") {
     name
     fields {
       name

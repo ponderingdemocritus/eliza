@@ -1,4 +1,5 @@
 import {
+    Action,
     ActionExample,
     elizaLogger,
     generateObject,
@@ -6,7 +7,6 @@ import {
     IAgentRuntime,
     Memory,
     ModelClass,
-    type Action,
 } from "@ai16z/eliza";
 import { Call } from "starknet";
 import { validateStarknetConfig } from "../enviroment";
@@ -15,7 +15,7 @@ import { PROVIDER_EXAMPLES } from "../prompts/provider-examples";
 import { AVAILABLE_QUERIES } from "../prompts/queries-available";
 import { WORLD_GUIDE } from "../prompts/world-guide";
 import { WORLD_STATE } from "../prompts/world-state";
-import { callEternum, fetchData, getRealmState } from "../providers";
+import { callEternum, fetchData } from "../providers";
 import { EternumState } from "../types";
 import { composeContext } from "../utils";
 
@@ -58,7 +58,6 @@ export default {
                 queriesAvailable: AVAILABLE_QUERIES,
                 availableActions: PROVIDER_EXAMPLES,
             })) as EternumState;
-            elizaLogger.success("New state created successfully");
         } else {
             elizaLogger.log("Updating existing state");
             state = (await runtime.updateRecentMessageState(state, {
@@ -68,7 +67,6 @@ export default {
                 availableActions: PROVIDER_EXAMPLES,
                 currentHighLevelGoal: message.content.text,
             })) as EternumState;
-            elizaLogger.success("State updated successfully", state);
         }
 
         const handleStepError = (step: string) => {
@@ -101,8 +99,6 @@ export default {
             modelClass: ModelClass.MEDIUM,
         });
 
-        console.log("stepsContent", stepsContent);
-
         callback?.({
             text: `Processing steps: ${JSON.stringify(stepsContent, null, 2)}`,
             content: {
@@ -128,7 +124,7 @@ export default {
             state: EternumState
         ): Promise<
             | {
-                  actionType: "invoke" | "query" | "getRealmState";
+                  actionType: "invoke" | "query" | "FAIL";
                   data: string;
                   nextStep: Step;
               }
@@ -136,44 +132,143 @@ export default {
         > => {
             elizaLogger.log(`Generating step with template: ${step.name}...`);
 
-            const context = composeContext({
-                state,
-                template: stepTemplate,
-            });
+            try {
+                const context = composeContext({
+                    state,
+                    template: stepTemplate,
+                });
 
-            // elizaLogger.log("Context composed, generating content...", context);
-            const content = await generateObject({
-                runtime,
-                context,
-                modelClass: ModelClass.MEDIUM,
-            });
-            // elizaLogger.success("Step content generated successfully", content);
+                const content = await generateObject({
+                    runtime,
+                    context,
+                    modelClass: ModelClass.MEDIUM,
+                });
 
-            if (typeof content === "string") {
-                try {
-                    // Enhanced sanitization of the JSON string
-                    const sanitizedContent = content
-                        .replace(/[\x00-\x1F\x7F-\x9F]/g, "") // Remove control characters
-                        .replace(/\\[^"\/bfnrtu]/g, "\\\\") // Escape invalid escape sequences
-                        .replace(/\u0000-\u0019/g, ""); // Remove ASCII control characters
+                if (typeof content === "string") {
+                    // Advanced string sanitization function
+                    const sanitizeJSON = (str: string): string => {
+                        let result = str;
+
+                        // Fix common JSON issues
+                        result = result
+                            // Remove any non-printable characters
+                            .replace(/[\x00-\x1F\x7F-\x9F]/g, "")
+                            // Fix escaped quotes inside strings
+                            .replace(/\\"/g, '"')
+                            .replace(/\\\\/g, "\\")
+                            // Remove multiple spaces
+                            .replace(/\s+/g, " ")
+                            // Fix unescaped quotes
+                            .replace(/(?<!\\)"/g, '\\"')
+                            // Fix trailing commas in objects and arrays
+                            .replace(/,\s*([\]}])/g, "$1")
+                            // Remove BOM and other Unicode markers
+                            .replace(/^\uFEFF/, "")
+                            // Ensure proper string termination
+                            .replace(/([^"\\])"([^"]*$)/g, '$1"')
+                            // Remove invalid escape sequences
+                            .replace(/\\[^"\\\/bfnrtu]/g, "");
+
+                        // Attempt to balance quotes
+                        const quoteCount = (result.match(/"/g) || []).length;
+                        if (quoteCount % 2 !== 0) {
+                            result = result + '"';
+                        }
+
+                        return result;
+                    };
 
                     try {
-                        return JSON.parse(sanitizedContent);
-                    } catch (parseError) {
-                        elizaLogger.error("JSON Parse Error:", parseError);
+                        // First attempt: direct parse
+                        try {
+                            const parsedContent = JSON.parse(content);
+                            elizaLogger.log(
+                                "Successfully parsed content directly"
+                            );
+                            return parsedContent;
+                        } catch (initialError) {
+                            // Second attempt: with sanitization
+                            const sanitizedContent = sanitizeJSON(content);
+                            try {
+                                const parsedContent =
+                                    JSON.parse(sanitizedContent);
+                                elizaLogger.log(
+                                    "Successfully parsed sanitized content"
+                                );
+                                return parsedContent;
+                            } catch (sanitizedError) {
+                                // Third attempt: try to extract valid JSON
+                                elizaLogger.warn(
+                                    "Attempting to extract valid JSON structure..."
+                                );
+                                const jsonMatch = content.match(
+                                    /\{[\s\S]*\}|\[[\s\S]*\]/
+                                );
+                                if (jsonMatch) {
+                                    const extractedJson = sanitizeJSON(
+                                        jsonMatch[0]
+                                    );
+                                    try {
+                                        const parsedContent =
+                                            JSON.parse(extractedJson);
+                                        elizaLogger.log(
+                                            "Successfully parsed extracted JSON"
+                                        );
+                                        return parsedContent;
+                                    } catch (extractError) {
+                                        throw new Error(
+                                            "Failed to parse extracted JSON"
+                                        );
+                                    }
+                                }
+                                throw new Error(
+                                    "No valid JSON structure found"
+                                );
+                            }
+                        }
+                    } catch (error) {
                         elizaLogger.error(
-                            "Sanitized Content:",
-                            sanitizedContent
+                            "All JSON parsing attempts failed:",
+                            error
                         );
-                        return false;
-                    }
-                } catch (e) {
-                    elizaLogger.error("Content Sanitization Error:", e);
-                    return false;
-                }
-            }
+                        elizaLogger.error("Original content:", content);
 
-            return content;
+                        // Return a safe fallback response
+                        return {
+                            actionType: "FAIL",
+                            data: "PARSING_ERROR",
+                            nextStep: {
+                                name: "Error Recovery",
+                                reasoning:
+                                    "Failed to parse step data. Proceeding with safe fallback.",
+                            },
+                        };
+                    }
+                }
+
+                return (
+                    content || {
+                        actionType: "FAIL",
+                        data: "INVALID_CONTENT",
+                        nextStep: {
+                            name: "Error Recovery",
+                            reasoning:
+                                "Invalid content received. Proceeding with safe fallback.",
+                        },
+                    }
+                );
+            } catch (error) {
+                elizaLogger.error("Critical error in generateStep:", error);
+                return {
+                    actionType: "FAIL",
+                    data: "CRITICAL_ERROR",
+                    nextStep: {
+                        name: "Error Recovery",
+                        reasoning:
+                            "Critical error occurred. Proceeding with safe fallback.",
+                    },
+                };
+            }
         };
 
         try {
@@ -196,6 +291,8 @@ export default {
         let currentSteps = [...stepsContent];
         let stepIndex = 0;
 
+        let output: string = "";
+
         // Execute steps dynamically
         elizaLogger.log("Beginning step execution...");
         while (stepIndex < currentSteps.length) {
@@ -205,7 +302,7 @@ export default {
 
             elizaLogger.log("content", JSON.stringify(content, null, 2));
 
-            let output: string = "";
+            const TIMESTAMP = new Date().toISOString();
 
             if (!content) {
                 elizaLogger.error(
@@ -215,48 +312,37 @@ export default {
             }
 
             // Process action type and get output
-            if (typeof content === "object" && "actionType" in content) {
-                if (content.actionType === "invoke") {
-                    elizaLogger.log("Invoking action...");
+            if (
+                typeof content === "object" &&
+                content.actionType === "invoke"
+            ) {
+                elizaLogger.log(
+                    "Invoking action: " + JSON.stringify(content.data, null, 2)
+                );
 
-                    elizaLogger.log(
-                        "Invoking action: " +
-                            JSON.stringify(content.data, null, 2)
-                    );
+                const invokeResponse = await callEternum(
+                    runtime,
+                    content.data as unknown as Call
+                );
+                output = `${output}\nInvoked with this response ${TIMESTAMP}: ${invokeResponse}`;
 
-                    output =
-                        "Invoked with this response: " +
-                        (await callEternum(
-                            runtime,
-                            content.data as unknown as Call
-                        ));
-                } else if (content.actionType === "query") {
-                    elizaLogger.log("Querying...");
+                elizaLogger.log("output", output);
+            } else if (
+                typeof content === "object" &&
+                content.actionType === "query"
+            ) {
+                elizaLogger.log("Querying...");
 
-                    //  TODO: Types
-                    const contentData =
-                        typeof content.data === "string"
-                            ? JSON.parse(content.data)
-                            : content.data;
+                const contentData =
+                    typeof content.data === "string"
+                        ? JSON.parse(content.data)
+                        : content.data;
 
-                    const data = await fetchData(
-                        contentData.query,
-                        contentData.variables
-                    );
-                    output =
-                        "Successfully queried: " +
-                        JSON.stringify(content.data) +
-                        "returned: " +
-                        JSON.stringify(data, null, 2);
-
-                    elizaLogger.log("output", output);
-                } else if (content.actionType === "getRealmState") {
-                    elizaLogger.log("Getting realm state...");
-                    const realmState = await getRealmState(
-                        content.data as unknown as number
-                    );
-                    output = "Realm state: " + realmState;
-                }
+                const data = await fetchData(
+                    contentData.query,
+                    contentData.variables
+                );
+                output = `${output}\nSuccessfully queried ${TIMESTAMP}: ${JSON.stringify(content.data)} returned: ${JSON.stringify(data, null, 2)}`;
             }
 
             // Handle next step insertion
@@ -266,9 +352,7 @@ export default {
                 content.nextStep &&
                 Object.keys(content.nextStep).length > 0
             ) {
-                elizaLogger.log(
-                    `Inserting next step after current step: ${step.name}`
-                );
+                elizaLogger.log(`Next Step: ${content.nextStep.name}`);
                 const nextStepIndex = stepIndex + 1;
                 if (
                     nextStepIndex >= currentSteps.length ||
@@ -278,10 +362,11 @@ export default {
                 }
             }
 
+            elizaLogger.log("output", output);
+
             // Update state with current progress
             const nextStep = currentSteps[stepIndex + 1];
 
-            console.log(currentSteps);
             state = (await runtime.composeState(message, {
                 ...state,
                 allSteps: currentSteps,
@@ -292,13 +377,15 @@ export default {
 
             elizaLogger.success(`Step ${step.name} completed successfully`);
 
-            callback?.({
-                text: `Thinking: ${step.name} - ${step.reasoning}`,
-                content: {
-                    worldState: state.worldState,
-                    steps: currentSteps,
-                },
-            });
+            if (nextStep) {
+                callback?.({
+                    text: `Next Step: ${nextStep?.name} - ${nextStep?.reasoning}`,
+                    content: {
+                        worldState: state.worldState,
+                        steps: currentSteps,
+                    },
+                });
+            }
 
             stepIndex++;
         }
