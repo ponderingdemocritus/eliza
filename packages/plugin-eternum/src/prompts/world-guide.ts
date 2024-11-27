@@ -44,6 +44,7 @@ Storehouse: 2
 
 REALM LEVELS
 Realm levels determine the maximum distance you can build buildings from the center of your realm.
+You can check your current realm level with eternum_RealmLevel
 Settlement (1) = 6 buildable hexes - starting realm level
 City (2) = 18 buildable hexes, requires 3000k Wheat and 3000k Fish
 Kingdom (3) = Requires:

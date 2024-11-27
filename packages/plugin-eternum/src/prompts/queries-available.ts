@@ -1,15 +1,21 @@
 export const AVAILABLE_QUERIES = `
-Use this to query for information about the game. 
+# Eternum GraphQL Query Guide
 
-YOU MUST FOLLOW THESE STEPS:
-1. Introspect the schema with the following, replace the model name. You should do this if you don't know the fields available to a model.
-2. With the understanding of the schema, create a query using the structure that exists
-3. Only use entity_id in queries, unless you are finding the entity_id with the $REALM_ID
+## Overview
+This guide helps you query information about the Eternum game using GraphQL. Follow the structured approach below to build effective queries.
 
-For all transactions you will need the entity_id of the realm you are building on which you can get with the following query:
+## Quick Start Guide
+1. Find the realm's entity_id using the realm_id
+2. Get the realm's position (x, y coordinates)
+3. Query specific information using the entity_id and coordinates
 
-query {
-  eternumRealmModels (where: {realm_id: 6671}) {
+## Common Queries
+
+### 1. Get Realm Information
+Use this to find a realm's entity_id and level:
+\`\`\`graphql
+query GetRealmInfo($realmId: Int!) {
+  eternumRealmModels(where: { realm_id: $realmId }) {
     edges {
       node {
         ... on eternum_Realm {
@@ -20,10 +26,13 @@ query {
     }
   }
 }
+\`\`\`
 
-You can get the outer_col(x) and outer_row (y) of a realm with the following query, you need this information to find the resources and buildings of a realm:
-query {
-  eternumPositionModels (where: {entity_id: $ENTITY_ID}, limit: 100)  {
+### 2. Get Realm Position
+After getting the entity_id, find the realm's coordinates:
+\`\`\`graphql
+query GetRealmPosition($entityId: String!) {
+  eternumPositionModels(where: { entity_id: $entityId }, limit: 1) {
     edges {
       node {
         ... on eternum_Position {
@@ -34,10 +43,13 @@ query {
     }
   }
 }
+\`\`\`
 
-To get the resources and the buildings of a realm, you can use the following query:
-query {
-  eternumResourceModels (where: {entity_id: $ENTITY_ID}, limit: 100) {
+### 3. Get Realm Resources and Buildings
+Query both resources and buildings in one call:
+\`\`\`graphql
+query GetRealmDetails($entityId: String!, $x: Int!, $y: Int!) {
+  eternumResourceModels(where: { entity_id: $entityId }, limit: 100) {
     edges {
       node {
         ... on eternum_Resource {
@@ -47,7 +59,7 @@ query {
       }
     }
   }
-  eternumBuildingModels (where: {outer_col: $X, outer_row: $Y})  {
+  eternumBuildingModels(where: { outer_col: $x, outer_row: $y }) {
     edges {
       node {
         ... on eternum_Building {
@@ -60,26 +72,13 @@ query {
     }
   }
 }
-  
+\`\`\`
 
-This is a graphql query example, you can see the structure that exists, then dynamically create queries.
-{
-  eternumAcceptOrderModels	 {
-    edges {
-      node {
-        ... on eternum_AcceptOrder {
-          taker_id
-          maker_id
-        }
-      }
-    }
-  }
-}
-
-This is how you introspect the schema, replace the model name.
-
-query {
-  __type(name: "$MODEL_NAME") {
+## Schema Introspection
+To explore available fields for any model:
+\`\`\`graphql
+query IntrospectModel($modelName: String!) {
+  __type(name: $modelName) {
     name
     fields {
       name
@@ -94,9 +93,15 @@ query {
     }
   }
 }
+\`\`\`
 
-AVAILABLE MODELS:
+## Important Guidelines
+1. Always use entity_id in queries unless specifically searching by realm_id
+2. Use limit parameters to control result size
+3. Include proper type casting in variables
+4. Follow the nested structure: Models → edges → node → specific type
 
+## Available Models
 eternum_AcceptOrder
 eternum_AcceptPartialOrder
 eternum_AddressName
@@ -218,6 +223,9 @@ eternum_Weight
 eternum_WeightConfig
 eternum_WorldConfig
 
-
-
+## Best Practices
+1. Always validate entity_id before querying
+2. Use pagination for large result sets
+3. Include only necessary fields in your queries
+4. Handle null values appropriately
 `;
