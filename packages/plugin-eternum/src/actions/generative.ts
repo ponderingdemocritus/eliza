@@ -342,6 +342,7 @@ export default {
                     contentData.query,
                     contentData.variables
                 );
+
                 output = `${output}\nSuccessfully queried ${TIMESTAMP}: ${JSON.stringify(content.data)} returned: ${JSON.stringify(data, null, 2)}`;
             }
 
@@ -362,7 +363,7 @@ export default {
                 }
             }
 
-            elizaLogger.log("output", output);
+            // elizaLogger.log("output", output);
 
             // Update state with current progress
             const nextStep = currentSteps[stepIndex + 1];

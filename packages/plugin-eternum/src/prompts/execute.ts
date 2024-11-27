@@ -3,78 +3,72 @@ const stepTemplate = `
 Your current high level goal is:
 {{currentHighLevelGoal}}
 
-You are an expert at executing steps in a game and you are a domain expert in the game Eternum. Reason deeply about the steps you are given and the output of the last steps to reach your goal.
-
-{{gameDescription}}
+You are executing steps in Eternum to achieve your goal. Review the previous outputs and steps to determine the next action.
 
 LAST STEPS OUTPUT:
 {{output}}
 
-ALL STEPS YOU HAVE EXECUTED SO FAR:
+ALL STEPS EXECUTED:
 {{allSteps}}
 
 WORLD STATE:
 {{worldState}}
 
-- Based on the above decide what information you need to fetched from the game. Use the schema examples and format the query accordingly to match the schema.
-- Decide to either invoke a query or an action.
-Important: Never change past steps, only add new steps after the current step. You can delete are rearrange steps if needed if they exist in the future.
+GAME DESCRIPTION:
+{{gameDescription}}
 
-These are the available actions you can use:
-{{availableActions}}
+You must return ONE of the following response formats:
 
-Current execution state:
-- Current step: {{currentStepTitle}} + {{currentStepReasoning}}
-- Completed steps: {{completedSteps}}
-- Planned steps: {{plannedSteps}}
-
-Make sure to change the contract address if you are invoking an action.
-
-Return the action you want to invoke and the parameters as an object like this:
+1. To execute a contract call:
 \`\`\`json
 {
-  actionType: "invoke",
-  data: {
-      "contractAddress": "0x0000000000000000000000000000000000000000",
-      "entrypoint": "example_entrypoint",
-      "calldata": [
-        1,
-        [
-          1,
-          1
-        ],
-        1,
-        0,
-      ]
-    },
-  nextStep: { name: "Checking for resources", reasoning: "<reasoning for the next step>" }
+  "actionType": "invoke",
+  "data": {
+    "contractAddress": "<contract_address>",
+    "entrypoint": "<function_name>", 
+    "calldata": []
+  },
+  "nextStep": {
+    "name": "Step name",
+    "reasoning": "Why this is the next step"
+  }
 }
 \`\`\`
 
-Or if you want to query the game, these are the available queries you can use:
-{{queriesAvailable}}
-
-Return the query you want to invoke and the variables as an object like this:
-
+2. To query game state:
 \`\`\`json
 {
-  "actionType": "query",
+  "actionType": "query", 
   "data": {
-    "query": "<query>",
-    "variables": {
-      // variables go here
-    }
+    "query": "<graphql_query>",
+    "variables": {}
   },
-  nextStep: { name: "Checking for resources", reasoning: "<reasoning for the next step>" }
+  "nextStep": {
+    "name": "Step name",
+    "reasoning": "Why this is the next step"
+  }
 }
+\`\`\`
 
-IMPORTANT RULES FOR STEP HANDLING:
-1. Base the next step on new information learned from the last steps output: {{output}}
-2. See what would be the next step based on the current step and the goal.
-3. If you don't think another step is needed just return an empty nextStep {}.
-4. Don't add comments or use "//" in the JSON object.
+AVAILABLE ACTIONS:
+{{availableActions}}
 
-Make sure to only return one object like above depending on the action you want to take.
+AVAILABLE QUERIES:
+{{queriesAvailable}}
+
+EXECUTION STATE:
+Current step: {{currentStepTitle}} - {{currentStepReasoning}}
+Completed: {{completedSteps}}
+Planned: {{plannedSteps}}
+
+RULES:
+1. Return exactly ONE response object
+2. Base next step on the output of previous steps
+3. Do not include comments in JSON
+4. If no next step is needed, use "nextStep": {}
+5. Always use actual values, never placeholders like <contract_address>
+6. Query for information before executing transactions
+7. Verify costs and requirements before building
 `;
 
 const defineSteps = `

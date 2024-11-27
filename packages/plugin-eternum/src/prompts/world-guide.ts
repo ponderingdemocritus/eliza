@@ -42,6 +42,27 @@ Watch Tower: 2
 Walls: 2
 Storehouse: 2
 
+REALM LEVELS
+Realm levels determine the maximum distance you can build buildings from the center of your realm.
+Settlement (1) = 6 buildable hexes - starting realm level
+City (2) = 18 buildable hexes, requires 3000k Wheat and 3000k Fish
+Kingdom (3) = Requires:
+- 600k ColdIron
+- 600k Hartwood  
+- 600k Diamonds
+- 600k Sapphire
+- 600k DeepCrystal
+- 5000k Wheat
+- 5000k Fish
+
+Empire (4) = Requires:
+- 50k AlchemicalSilver
+- 50k Adamantine
+- 50k Mithral 
+- 50k Dragonhide
+- 9000k Wheat
+- 9000k Fish
+
 
 RESOURCE IDS
 Stone = 1,

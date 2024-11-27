@@ -14,6 +14,7 @@ query {
       node {
         ... on eternum_Realm {
           entity_id
+          level
         }
       }
     }

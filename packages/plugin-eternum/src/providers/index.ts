@@ -108,6 +108,8 @@ export const callEternum = async (
     call: Call
 ): Promise<any> => {
     try {
+        console.log("Compiling call data:", call.calldata);
+
         call.calldata = CallData.compile(call.calldata || []);
 
         console.log("Calling Eternum:", call);
