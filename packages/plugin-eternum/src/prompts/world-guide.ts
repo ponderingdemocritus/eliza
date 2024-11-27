@@ -14,6 +14,7 @@ Building a Building
 3. If you have enough resources, use eternum_CreateBuilding to build the building
 
 BUILDING COSTS
+// 
 Market: 750000 Fish, 125000 Stone, 50000 Obsidian, 25000 Ruby, 5000 DeepCrystal
 Barracks: 1000000 Wheat, 75000 Wood, 75000 Coal, 50000 Silver, 45000 Gold
 Archery Range: 1000000 Fish, 75000 Wood, 75000 Obsidian, 25000 Gold, 25000 Hartwood

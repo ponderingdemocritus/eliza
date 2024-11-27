@@ -6,3 +6,8 @@ export interface EternumState extends State {
     queriesAvailable: string;
     availableActions: string;
 }
+
+export interface Step {
+    name: string;
+    reasoning: string;
+}
