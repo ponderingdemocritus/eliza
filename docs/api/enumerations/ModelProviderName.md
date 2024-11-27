@@ -14,7 +14,7 @@ Available model providers
 
 [packages/core/src/types.ts:207](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L207)
 
-***
+---
 
 ### ANTHROPIC
 
@@ -24,7 +24,7 @@ Available model providers
 
 [packages/core/src/types.ts:208](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L208)
 
-***
+---
 
 ### GROK
 
@@ -34,7 +34,7 @@ Available model providers
 
 [packages/core/src/types.ts:209](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L209)
 
-***
+---
 
 ### GROQ
 
@@ -44,7 +44,7 @@ Available model providers
 
 [packages/core/src/types.ts:210](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L210)
 
-***
+---
 
 ### LLAMACLOUD
 
@@ -54,7 +54,7 @@ Available model providers
 
 [packages/core/src/types.ts:211](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L211)
 
-***
+---
 
 ### LLAMALOCAL
 
@@ -64,7 +64,7 @@ Available model providers
 
 [packages/core/src/types.ts:212](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L212)
 
-***
+---
 
 ### GOOGLE
 
@@ -74,17 +74,17 @@ Available model providers
 
 [packages/core/src/types.ts:213](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L213)
 
-***
+---
 
-### CLAUDE\_VERTEX
+### CLAUDE_VERTEX
 
-> **CLAUDE\_VERTEX**: `"claude_vertex"`
+> **CLAUDE_VERTEX**: `"claude_vertex"`
 
 #### Defined in
 
 [packages/core/src/types.ts:214](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L214)
 
-***
+---
 
 ### REDPILL
 
@@ -94,7 +94,7 @@ Available model providers
 
 [packages/core/src/types.ts:215](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L215)
 
-***
+---
 
 ### OPENROUTER
 
@@ -104,7 +104,7 @@ Available model providers
 
 [packages/core/src/types.ts:216](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L216)
 
-***
+---
 
 ### OLLAMA
 
@@ -114,7 +114,7 @@ Available model providers
 
 [packages/core/src/types.ts:217](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L217)
 
-***
+---
 
 ### HEURIST
 

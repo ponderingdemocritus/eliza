@@ -16,7 +16,7 @@ Unique identifier
 
 [packages/core/src/types.ts:452](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L452)
 
-***
+---
 
 ### userA
 
@@ -28,7 +28,7 @@ First user ID
 
 [packages/core/src/types.ts:455](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L455)
 
-***
+---
 
 ### userB
 
@@ -40,7 +40,7 @@ Second user ID
 
 [packages/core/src/types.ts:458](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L458)
 
-***
+---
 
 ### userId
 
@@ -52,7 +52,7 @@ Primary user ID
 
 [packages/core/src/types.ts:461](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L461)
 
-***
+---
 
 ### roomId
 
@@ -64,7 +64,7 @@ Associated room ID
 
 [packages/core/src/types.ts:464](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L464)
 
-***
+---
 
 ### status
 
@@ -76,7 +76,7 @@ Relationship status
 
 [packages/core/src/types.ts:467](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L467)
 
-***
+---
 
 ### createdAt?
 

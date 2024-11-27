@@ -32,7 +32,7 @@ Optional initialization
 
 [packages/core/src/types.ts:706](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L706)
 
-***
+---
 
 ### getAccountById()
 
@@ -52,7 +52,7 @@ Get account by ID
 
 [packages/core/src/types.ts:709](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L709)
 
-***
+---
 
 ### createAccount()
 
@@ -72,7 +72,7 @@ Create new account
 
 [packages/core/src/types.ts:712](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L712)
 
-***
+---
 
 ### getMemories()
 
@@ -106,7 +106,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:715](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L715)
 
-***
+---
 
 ### getMemoryById()
 
@@ -124,7 +124,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:725](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L725)
 
-***
+---
 
 ### getMemoriesByRoomIds()
 
@@ -146,7 +146,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:727](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L727)
 
-***
+---
 
 ### getCachedEmbeddings()
 
@@ -156,17 +156,17 @@ Get memories matching criteria
 
 • **params**
 
-• **params.query\_table\_name**: `string`
+• **params.query_table_name**: `string`
 
-• **params.query\_threshold**: `number`
+• **params.query_threshold**: `number`
 
-• **params.query\_input**: `string`
+• **params.query_input**: `string`
 
-• **params.query\_field\_name**: `string`
+• **params.query_field_name**: `string`
 
-• **params.query\_field\_sub\_name**: `string`
+• **params.query_field_sub_name**: `string`
 
-• **params.query\_match\_count**: `number`
+• **params.query_match_count**: `number`
 
 #### Returns
 
@@ -176,7 +176,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:732](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L732)
 
-***
+---
 
 ### log()
 
@@ -202,7 +202,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:741](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L741)
 
-***
+---
 
 ### getActorDetails()
 
@@ -222,7 +222,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:748](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L748)
 
-***
+---
 
 ### searchMemories()
 
@@ -240,9 +240,9 @@ Get memories matching criteria
 
 • **params.embedding**: `number`[]
 
-• **params.match\_threshold**: `number`
+• **params.match_threshold**: `number`
 
-• **params.match\_count**: `number`
+• **params.match_count**: `number`
 
 • **params.unique**: `boolean`
 
@@ -254,7 +254,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:750](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L750)
 
-***
+---
 
 ### updateGoalStatus()
 
@@ -276,7 +276,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:760](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L760)
 
-***
+---
 
 ### searchMemoriesByEmbedding()
 
@@ -288,7 +288,7 @@ Get memories matching criteria
 
 • **params**
 
-• **params.match\_threshold?**: `number`
+• **params.match_threshold?**: `number`
 
 • **params.count?**: `number`
 
@@ -308,7 +308,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:765](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L765)
 
-***
+---
 
 ### createMemory()
 
@@ -330,7 +330,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:777](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L777)
 
-***
+---
 
 ### removeMemory()
 
@@ -350,7 +350,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:783](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L783)
 
-***
+---
 
 ### removeAllMemories()
 
@@ -370,7 +370,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:785](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L785)
 
-***
+---
 
 ### countMemories()
 
@@ -392,7 +392,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:787](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L787)
 
-***
+---
 
 ### getGoals()
 
@@ -420,7 +420,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:793](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L793)
 
-***
+---
 
 ### updateGoal()
 
@@ -438,7 +438,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:801](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L801)
 
-***
+---
 
 ### createGoal()
 
@@ -456,7 +456,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:803](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L803)
 
-***
+---
 
 ### removeGoal()
 
@@ -474,7 +474,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:805](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L805)
 
-***
+---
 
 ### removeAllGoals()
 
@@ -492,7 +492,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:807](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L807)
 
-***
+---
 
 ### getRoom()
 
@@ -510,7 +510,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:809](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L809)
 
-***
+---
 
 ### createRoom()
 
@@ -528,7 +528,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:811](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L811)
 
-***
+---
 
 ### removeRoom()
 
@@ -546,7 +546,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:813](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L813)
 
-***
+---
 
 ### getRoomsForParticipant()
 
@@ -564,7 +564,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:815](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L815)
 
-***
+---
 
 ### getRoomsForParticipants()
 
@@ -582,7 +582,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:817](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L817)
 
-***
+---
 
 ### addParticipant()
 
@@ -602,7 +602,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:819](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L819)
 
-***
+---
 
 ### removeParticipant()
 
@@ -622,7 +622,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:821](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L821)
 
-***
+---
 
 ### getParticipantsForAccount()
 
@@ -640,7 +640,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:823](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L823)
 
-***
+---
 
 ### getParticipantsForRoom()
 
@@ -658,7 +658,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:825](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L825)
 
-***
+---
 
 ### getParticipantUserState()
 
@@ -678,7 +678,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:827](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L827)
 
-***
+---
 
 ### setParticipantUserState()
 
@@ -700,7 +700,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:832](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L832)
 
-***
+---
 
 ### createRelationship()
 
@@ -722,7 +722,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:838](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L838)
 
-***
+---
 
 ### getRelationship()
 
@@ -744,7 +744,7 @@ Get memories matching criteria
 
 [packages/core/src/types.ts:840](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L840)
 
-***
+---
 
 ### getRelationships()
 

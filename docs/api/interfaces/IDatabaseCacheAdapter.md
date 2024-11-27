@@ -24,7 +24,7 @@
 
 [packages/core/src/types.ts:849](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L849)
 
-***
+---
 
 ### setCache()
 
@@ -48,7 +48,7 @@
 
 [packages/core/src/types.ts:854](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L854)
 
-***
+---
 
 ### deleteCache()
 

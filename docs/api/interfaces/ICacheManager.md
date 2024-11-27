@@ -24,7 +24,7 @@
 
 [packages/core/src/types.ts:908](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L908)
 
-***
+---
 
 ### set()
 
@@ -50,7 +50,7 @@
 
 [packages/core/src/types.ts:909](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L909)
 
-***
+---
 
 ### delete()
 

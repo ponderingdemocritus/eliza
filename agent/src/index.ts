@@ -269,7 +269,7 @@ export function createAgent(
                 ? coinbaseCommercePlugin
                 : null,
             getSecret(character, "COINBASE_API_KEY") &&
-                getSecret(character, "COINBASE_PRIVATE_KEY")
+            getSecret(character, "COINBASE_PRIVATE_KEY")
                 ? coinbaseMassPaymentsPlugin
                 : null,
         ].filter(Boolean),

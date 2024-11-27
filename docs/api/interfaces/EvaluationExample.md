@@ -16,7 +16,7 @@ Evaluation context
 
 [packages/core/src/types.ts:400](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L400)
 
-***
+---
 
 ### messages
 
@@ -28,7 +28,7 @@ Example messages
 
 [packages/core/src/types.ts:403](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L403)
 
-***
+---
 
 ### outcome
 

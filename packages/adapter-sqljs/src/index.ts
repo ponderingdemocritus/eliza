@@ -18,7 +18,8 @@ import { Database } from "./types.ts";
 
 export class SqlJsDatabaseAdapter
     extends DatabaseAdapter<Database>
-    implements IDatabaseCacheAdapter {
+    implements IDatabaseCacheAdapter
+{
     constructor(db: Database) {
         super();
         this.db = db;
@@ -77,10 +78,14 @@ export class SqlJsDatabaseAdapter
         const placeholders = params.roomIds.map(() => "?").join(", ");
         let sql = `SELECT * FROM memories WHERE 'type' = ? AND agentId = ? AND roomId IN (${placeholders})`;
         const stmt = this.db.prepare(sql);
-        const queryParams = [params.tableName, params.agentId, ...params.roomIds];
-        console.log({ queryParams })
+        const queryParams = [
+            params.tableName,
+            params.agentId,
+            ...params.roomIds,
+        ];
+        console.log({ queryParams });
         stmt.bind(queryParams);
-        console.log({ queryParams })
+        console.log({ queryParams });
 
         const memories: Memory[] = [];
         while (stmt.step()) {

@@ -16,7 +16,7 @@ Associated user
 
 [packages/core/src/types.ts:338](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L338)
 
-***
+---
 
 ### content
 

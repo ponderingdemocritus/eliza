@@ -16,7 +16,7 @@ Unique identifier
 
 [packages/core/src/types.ts:501](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L501)
 
-***
+---
 
 ### account
 

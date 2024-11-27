@@ -12,7 +12,7 @@
 
 [packages/core/src/types.ts:1089](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1089)
 
-***
+---
 
 ### VERBOSE
 
@@ -22,7 +22,7 @@
 
 [packages/core/src/types.ts:1090](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1090)
 
-***
+---
 
 ### NONE
 

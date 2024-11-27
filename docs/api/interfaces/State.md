@@ -6,7 +6,7 @@ Represents the current state/context of a conversation
 
 ## Indexable
 
- \[`key`: `string`\]: `unknown`
+\[`key`: `string`\]: `unknown`
 
 ## Properties
 
@@ -20,7 +20,7 @@ ID of user who sent current message
 
 [packages/core/src/types.ts:226](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L226)
 
-***
+---
 
 ### agentId?
 
@@ -32,7 +32,7 @@ ID of agent in conversation
 
 [packages/core/src/types.ts:229](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L229)
 
-***
+---
 
 ### bio
 
@@ -44,7 +44,7 @@ Agent's biography
 
 [packages/core/src/types.ts:232](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L232)
 
-***
+---
 
 ### lore
 
@@ -56,7 +56,7 @@ Agent's background lore
 
 [packages/core/src/types.ts:235](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L235)
 
-***
+---
 
 ### messageDirections
 
@@ -68,7 +68,7 @@ Message handling directions
 
 [packages/core/src/types.ts:238](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L238)
 
-***
+---
 
 ### postDirections
 
@@ -80,7 +80,7 @@ Post handling directions
 
 [packages/core/src/types.ts:241](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L241)
 
-***
+---
 
 ### roomId
 
@@ -92,7 +92,7 @@ Current room/conversation ID
 
 [packages/core/src/types.ts:244](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L244)
 
-***
+---
 
 ### agentName?
 
@@ -104,7 +104,7 @@ Optional agent name
 
 [packages/core/src/types.ts:247](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L247)
 
-***
+---
 
 ### senderName?
 
@@ -116,7 +116,7 @@ Optional message sender name
 
 [packages/core/src/types.ts:250](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L250)
 
-***
+---
 
 ### actors
 
@@ -128,7 +128,7 @@ String representation of conversation actors
 
 [packages/core/src/types.ts:253](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L253)
 
-***
+---
 
 ### actorsData?
 
@@ -140,7 +140,7 @@ Optional array of actor objects
 
 [packages/core/src/types.ts:256](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L256)
 
-***
+---
 
 ### goals?
 
@@ -152,7 +152,7 @@ Optional string representation of goals
 
 [packages/core/src/types.ts:259](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L259)
 
-***
+---
 
 ### goalsData?
 
@@ -164,7 +164,7 @@ Optional array of goal objects
 
 [packages/core/src/types.ts:262](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L262)
 
-***
+---
 
 ### recentMessages
 
@@ -176,7 +176,7 @@ Recent message history as string
 
 [packages/core/src/types.ts:265](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L265)
 
-***
+---
 
 ### recentMessagesData
 
@@ -188,7 +188,7 @@ Recent message objects
 
 [packages/core/src/types.ts:268](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L268)
 
-***
+---
 
 ### actionNames?
 
@@ -200,7 +200,7 @@ Optional valid action names
 
 [packages/core/src/types.ts:271](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L271)
 
-***
+---
 
 ### actions?
 
@@ -212,7 +212,7 @@ Optional action descriptions
 
 [packages/core/src/types.ts:274](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L274)
 
-***
+---
 
 ### actionsData?
 
@@ -224,7 +224,7 @@ Optional action objects
 
 [packages/core/src/types.ts:277](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L277)
 
-***
+---
 
 ### actionExamples?
 
@@ -236,7 +236,7 @@ Optional action examples
 
 [packages/core/src/types.ts:280](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L280)
 
-***
+---
 
 ### providers?
 
@@ -248,7 +248,7 @@ Optional provider descriptions
 
 [packages/core/src/types.ts:283](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L283)
 
-***
+---
 
 ### responseData?
 
@@ -260,7 +260,7 @@ Optional response content
 
 [packages/core/src/types.ts:286](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L286)
 
-***
+---
 
 ### recentInteractionsData?
 
@@ -272,7 +272,7 @@ Optional recent interaction objects
 
 [packages/core/src/types.ts:289](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L289)
 
-***
+---
 
 ### recentInteractions?
 
@@ -284,7 +284,7 @@ Optional recent interactions string
 
 [packages/core/src/types.ts:292](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L292)
 
-***
+---
 
 ### formattedConversation?
 

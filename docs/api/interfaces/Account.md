@@ -16,7 +16,7 @@ Unique identifier
 
 [packages/core/src/types.ts:478](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L478)
 
-***
+---
 
 ### name
 
@@ -28,7 +28,7 @@ Display name
 
 [packages/core/src/types.ts:481](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L481)
 
-***
+---
 
 ### username
 
@@ -40,7 +40,7 @@ Username
 
 [packages/core/src/types.ts:484](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L484)
 
-***
+---
 
 ### details?
 
@@ -50,13 +50,13 @@ Optional additional details
 
 #### Index Signature
 
- \[`key`: `string`\]: `any`
+\[`key`: `string`\]: `any`
 
 #### Defined in
 
 [packages/core/src/types.ts:487](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L487)
 
-***
+---
 
 ### email?
 
@@ -68,7 +68,7 @@ Optional email
 
 [packages/core/src/types.ts:490](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L490)
 
-***
+---
 
 ### avatarUrl?
 

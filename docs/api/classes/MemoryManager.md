@@ -54,7 +54,7 @@ The AgentRuntime instance associated with this manager.
 
 [packages/core/src/memory.ts:23](https://github.com/ai16z/eliza/blob/main/packages/core/src/memory.ts#L23)
 
-***
+---
 
 ### tableName
 
@@ -104,7 +104,7 @@ Error if the memory content is empty
 
 [packages/core/src/memory.ts:55](https://github.com/ai16z/eliza/blob/main/packages/core/src/memory.ts#L55)
 
-***
+---
 
 ### getMemories()
 
@@ -148,7 +148,7 @@ A Promise resolving to an array of Memory objects.
 
 [packages/core/src/memory.ts:90](https://github.com/ai16z/eliza/blob/main/packages/core/src/memory.ts#L90)
 
-***
+---
 
 ### getCachedEmbeddings()
 
@@ -170,7 +170,7 @@ A Promise resolving to an array of Memory objects.
 
 [packages/core/src/memory.ts:114](https://github.com/ai16z/eliza/blob/main/packages/core/src/memory.ts#L114)
 
-***
+---
 
 ### searchMemoriesByEmbedding()
 
@@ -188,7 +188,7 @@ The embedding vector to search with.
 
 Options including match threshold, count, user IDs, and uniqueness.
 
-• **opts.match\_threshold?**: `number`
+• **opts.match_threshold?**: `number`
 
 The similarity threshold for matching memories.
 
@@ -218,7 +218,7 @@ A Promise resolving to an array of Memory objects that match the embedding.
 
 [packages/core/src/memory.ts:140](https://github.com/ai16z/eliza/blob/main/packages/core/src/memory.ts#L140)
 
-***
+---
 
 ### createMemory()
 
@@ -250,7 +250,7 @@ A Promise that resolves when the operation completes.
 
 [packages/core/src/memory.ts:175](https://github.com/ai16z/eliza/blob/main/packages/core/src/memory.ts#L175)
 
-***
+---
 
 ### getMemoriesByRoomIds()
 
@@ -274,7 +274,7 @@ A Promise that resolves when the operation completes.
 
 [packages/core/src/memory.ts:195](https://github.com/ai16z/eliza/blob/main/packages/core/src/memory.ts#L195)
 
-***
+---
 
 ### getMemoryById()
 
@@ -296,7 +296,7 @@ A Promise that resolves when the operation completes.
 
 [packages/core/src/memory.ts:202](https://github.com/ai16z/eliza/blob/main/packages/core/src/memory.ts#L202)
 
-***
+---
 
 ### removeMemory()
 
@@ -324,7 +324,7 @@ A Promise that resolves when the operation completes.
 
 [packages/core/src/memory.ts:213](https://github.com/ai16z/eliza/blob/main/packages/core/src/memory.ts#L213)
 
-***
+---
 
 ### removeAllMemories()
 
@@ -352,7 +352,7 @@ A Promise that resolves when the operation completes.
 
 [packages/core/src/memory.ts:225](https://github.com/ai16z/eliza/blob/main/packages/core/src/memory.ts#L225)
 
-***
+---
 
 ### countMemories()
 

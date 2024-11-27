@@ -16,7 +16,7 @@ Unique identifier
 
 [packages/core/src/types.ts:512](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L512)
 
-***
+---
 
 ### participants
 

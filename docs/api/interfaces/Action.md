@@ -16,7 +16,7 @@ Similar action descriptions
 
 [packages/core/src/types.ts:377](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L377)
 
-***
+---
 
 ### description
 
@@ -28,7 +28,7 @@ Detailed description
 
 [packages/core/src/types.ts:380](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L380)
 
-***
+---
 
 ### examples
 
@@ -40,7 +40,7 @@ Example usages
 
 [packages/core/src/types.ts:383](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L383)
 
-***
+---
 
 ### handler
 
@@ -52,7 +52,7 @@ Handler function
 
 [packages/core/src/types.ts:386](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L386)
 
-***
+---
 
 ### name
 
@@ -64,7 +64,7 @@ Action name
 
 [packages/core/src/types.ts:389](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L389)
 
-***
+---
 
 ### validate
 
