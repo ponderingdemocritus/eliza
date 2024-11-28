@@ -5,8 +5,12 @@ Your current high level goal is:
 
 You are executing steps in Eternum to achieve your goal. Review the previous outputs and steps to determine the next action.
 
+You should:
+1. Think step by step to achieve the goal
+2. The last output is {{{{lastStepOutput}}}}, use it to determine the next step. You don't have to keep going over the same steps.
+
 LAST STEPS OUTPUT:
-{{output}}
+{{lastStepOutput}}
 
 ALL STEPS EXECUTED:
 {{allSteps}}
@@ -40,8 +44,7 @@ You must return ONE of the following response formats:
 {
   "actionType": "query", 
   "data": {
-    "query": "<graphql_query>",
-    "variables": {}
+    "query": "<graphql_query>"
   },
   "nextStep": {
     "name": "Step name",
@@ -62,14 +65,19 @@ Completed: {{completedSteps}}
 Planned: {{plannedSteps}}
 
 RULES:
-1. Return exactly ONE response object
-2. Base next step on the output of previous steps
-3. Do not include comments in JSON
-4. If no next step is needed, use "nextStep": {}
-5. Always use actual values, never placeholders like <contract_address>
-6. Query for information before executing transactions
-7. Verify costs and requirements before building
-8. Never go past 10 steps - if you do, you're probably doing too much, return an empty step.
+1. ONLY do the job you have been given
+2. Return exactly ONE response object
+3. Base next step on the output of previous steps
+4. Do not include comments in JSON
+5. If no next step is needed, use "nextStep": {}
+6. Always use actual values, never placeholders like <contract_address>
+7. Query for information before executing transactions
+8. Verify costs and requirements before building
+9. Never go past 10 steps - if you do, you're probably doing too much, return an empty step.
+
+
+HISTORY:
+{{output}}
 `;
 
 const defineSteps = `
@@ -88,7 +96,7 @@ Available actions:
 {{availableActions}}
 
 OBJECTIVE:
-Return a precise sequence of steps to achieve the given goal. Each step must be actionable and directly contribute to the goal.
+Return a precise sequence of steps to achieve the given goal. Each step must be actionable and directly contribute to the goal. Only work towards the goal you have been given.
 
 STEP VALIDATION RULES:
 1. Each step must have a clear, measurable outcome

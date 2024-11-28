@@ -18,11 +18,7 @@ import { WORLD_STATE } from "../prompts/world-state";
 import { callEternum, fetchData } from "../providers";
 import { EternumState, Step } from "../types";
 import { composeContext } from "../utils";
-import { generateStep } from "../utils/generate-step";
-
-interface StepsContent {
-    steps: Array<Step>;
-}
+import { generateStep, parseStepContent } from "../utils/generate-step";
 
 export default {
     name: "GENERATE",
@@ -88,14 +84,21 @@ export default {
             template: defineSteps,
         });
 
-        const stepsContent: StepsContent = await generateObject({
+        const stepsContent: Array<Step> = await generateObject({
             runtime,
             context,
             modelClass: ModelClass.MEDIUM,
         });
 
+        const formattedSteps = stepsContent
+            .map(
+                (step, index) =>
+                    `${index + 1}. ${step.name} - ${step.reasoning} (Priority: ${step.priority}, Dependencies: ${step.dependencies.length ? step.dependencies.join(", ") : "None"})`
+            )
+            .join("\n");
+
         callback?.({
-            text: `Attempting to execute steps: ${JSON.stringify(stepsContent, null, 2)}`,
+            text: `Attempting to execute steps:\n${formattedSteps}`,
             content: {
                 worldState: state.worldState,
                 steps: stepsContent,
@@ -126,12 +129,17 @@ export default {
             return handleStepError("steps parsing");
         }
 
-        state = (await runtime.composeState(message, {
-            ...state,
-            allSteps: [...stepsContent],
-            currentStepTitle: stepsContent[0].name,
-            currentStepReasoning: stepsContent[0].reasoning,
-        })) as EternumState;
+        try {
+            state = (await runtime.composeState(message, {
+                ...state,
+                allSteps: JSON.stringify(stepsContent, null, 2),
+                currentStepTitle: stepsContent[0].name,
+                currentStepReasoning: stepsContent[0].reasoning,
+            })) as EternumState;
+        } catch (error) {
+            elizaLogger.error("Failed to compose state:", error);
+            return handleStepError("state composition");
+        }
 
         let currentSteps = [...stepsContent];
         let stepIndex = 0;
@@ -140,12 +148,14 @@ export default {
         elizaLogger.log("Beginning step execution...");
         while (stepIndex < currentSteps.length) {
             const step = currentSteps[stepIndex];
+
             elizaLogger.log(`Executing step: ${step.name}`);
+
             const content = await generateStep(step, state, runtime);
 
-            elizaLogger.log("content", JSON.stringify(content, null, 2));
-
             const TIMESTAMP = new Date().toISOString();
+
+            let returnedData: unknown;
 
             if (!content) {
                 elizaLogger.error(
@@ -168,6 +178,8 @@ export default {
                 );
                 output = `${output}\nInvoked with this response ${TIMESTAMP}: ${invokeResponse}`;
 
+                returnedData = invokeResponse;
+
                 elizaLogger.log("output", output);
             } else if (
                 typeof content === "object" &&
@@ -185,7 +197,9 @@ export default {
                     contentData.variables
                 );
 
-                output = `${output}\nSuccessfully queried ${TIMESTAMP}: ${JSON.stringify(content.data)} returned: ${JSON.stringify(data, null, 2)}`;
+                returnedData = data;
+
+                output = `${output}\n${TIMESTAMP}: ${JSON.stringify(content)} returned: ${JSON.stringify(data, null, 2)}`;
             }
 
             // Handle next step insertion
@@ -195,7 +209,9 @@ export default {
                 content.nextStep &&
                 Object.keys(content.nextStep).length > 0
             ) {
-                elizaLogger.log(`Next Step: ${content.nextStep.name}`);
+                elizaLogger.log(
+                    `Next Step: ${JSON.stringify(content.nextStep, null, 2)}`
+                );
                 const nextStepIndex = stepIndex + 1;
                 if (
                     nextStepIndex >= currentSteps.length ||
@@ -208,13 +224,25 @@ export default {
             // Update state with current progress
             const nextStep = currentSteps[stepIndex + 1];
 
-            state = (await runtime.composeState(message, {
-                ...state,
-                allSteps: currentSteps,
-                currentStepTitle: nextStep?.name || null,
-                currentStepReasoning: nextStep?.reasoning || null,
-                output,
-            })) as EternumState;
+            try {
+                state = (await runtime.composeState(message, {
+                    ...state,
+                    allSteps: parseStepContent(
+                        JSON.stringify(currentSteps, null, 2)
+                    ),
+                    currentStepTitle: nextStep?.name || null,
+                    currentStepReasoning: nextStep?.reasoning || null,
+                    output,
+                    lastStepOutput: `${output}\n${TIMESTAMP}: ${parseStepContent(
+                        JSON.stringify(content, null, 2)
+                    )} returned: ${parseStepContent(
+                        JSON.stringify(returnedData, null, 2)
+                    )}`,
+                })) as EternumState;
+            } catch (e) {
+                elizaLogger.error("Failed to update state:", e);
+                return handleStepError("state update");
+            }
 
             elizaLogger.success(`Step ${step.name} completed successfully`);
 
@@ -281,6 +309,34 @@ export default {
                 user: "{{agent}}",
                 content: {
                     text: "Sure thing! I'll get started on that right away.",
+                },
+            },
+        ],
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "Can you check my resources?",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    text: "Sure thing! I'll get started on that right away.",
+                },
+            },
+        ],
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "Can you check the market of wood?",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    text: "Sure thing!",
                 },
             },
         ],

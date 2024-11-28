@@ -10,4 +10,7 @@ export interface EternumState extends State {
 export interface Step {
     name: string;
     reasoning: string;
+    priority: number;
+    dependencies: string[];
+    query: string;
 }

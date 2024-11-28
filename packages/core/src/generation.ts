@@ -2,13 +2,13 @@ import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createGroq } from "@ai-sdk/groq";
 import { createOpenAI } from "@ai-sdk/openai";
-import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import {
     generateObject as aiGenerateObject,
     generateText as aiGenerateText,
     GenerateObjectResult,
 } from "ai";
 import { Buffer } from "buffer";
+import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { createOllama } from "ollama-ai-provider";
 import OpenAI from "openai";
 import { encoding_for_model, TiktokenModel } from "tiktoken";
@@ -62,7 +62,7 @@ export async function generateText({
         return "";
     }
 
-    elizaLogger.log("Generating text...");
+    elizaLogger.success("Generating text...");
 
     elizaLogger.info("Generating text with options:", {
         modelProvider: runtime.modelProvider,
@@ -408,6 +408,8 @@ export function trimTokens(
     try {
         // Encode the text into tokens
         const tokens = encoding.encode(context);
+
+        elizaLogger.log("Tokens", tokens.length);
 
         // If already within limits, return unchanged
         if (tokens.length <= maxTokens) {

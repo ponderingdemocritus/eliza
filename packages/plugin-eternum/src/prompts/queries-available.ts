@@ -14,8 +14,8 @@ This guide helps you query information about the Eternum game using GraphQL. Fol
 ### 1. Get Realm Information
 Use this to find a realm's entity_id and level:
 \`\`\`graphql
-query GetRealmInfo($realmId: Int!) {
-  eternumRealmModels(where: { realm_id: $realmId }) {
+query GetRealmInfo {
+  eternumRealmModels(where: { realm_id: <realm_id> }) {
     edges {
       node {
         ... on eternum_Realm {
@@ -31,8 +31,8 @@ query GetRealmInfo($realmId: Int!) {
 ### 2. Get Realm Position
 After getting the entity_id, find the realm's coordinates:
 \`\`\`graphql
-query GetRealmPosition($entityId: String!) {
-  eternumPositionModels(where: { entity_id: $entityId }, limit: 1) {
+query GetRealmPosition {
+  eternumPositionModels(where: { entity_id: <entity_id> }, limit: 1) {
     edges {
       node {
         ... on eternum_Position {
@@ -48,8 +48,8 @@ query GetRealmPosition($entityId: String!) {
 ### 3. Get Realm Resources and Buildings
 Query both resources and buildings in one call:
 \`\`\`graphql
-query GetRealmDetails($entityId: String!, $x: Int!, $y: Int!) {
-  eternumResourceModels(where: { entity_id: $entityId }, limit: 100) {
+query GetRealmDetails {
+  eternumResourceModels(where: { entity_id: <entity_id> }, limit: 100) {
     edges {
       node {
         ... on eternum_Resource {
@@ -59,7 +59,7 @@ query GetRealmDetails($entityId: String!, $x: Int!, $y: Int!) {
       }
     }
   }
-  eternumBuildingModels(where: { outer_col: $x, outer_row: $y }) {
+  eternumBuildingModels(where: { outer_col: <x>, outer_row: <y> }) {
     edges {
       node {
         ... on eternum_Building {
@@ -77,8 +77,8 @@ query GetRealmDetails($entityId: String!, $x: Int!, $y: Int!) {
 ## Schema Introspection
 To explore available fields for any model:
 \`\`\`graphql
-query IntrospectModel($modelName: String!) {
-  __type(name: $modelName) {
+query IntrospectModel {
+  __type(name: <model_name>) {
     name
     fields {
       name
@@ -100,6 +100,7 @@ query IntrospectModel($modelName: String!) {
 2. Use limit parameters to control result size
 3. Include proper type casting in variables
 4. Follow the nested structure: Models → edges → node → specific type
+5. Only use the models listed below to query. If you get a response error - you might need to introspect the model.
 
 ## Available Models
 eternum_AcceptOrder
